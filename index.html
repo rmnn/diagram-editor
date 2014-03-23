@@ -5,13 +5,10 @@
 
     <link rel="stylesheet" href="vendor/bootstrap/css/bootstrap.css">
     <link rel="stylesheet" href="vendor/css/joint.css"/>
+    <link rel="stylesheet" href="vendor/css/base.css"/>
 
     <style>
-        #paper {
-            width: 600px;
-            height: 300px;
-            border: 1px solid gray;
-        }
+
     </style>
 
     <!--Scripts-->
@@ -25,7 +22,10 @@
 </head>
 <body ng-app="diagram" ng-controller="diagramCtrl">
 
-<button type="button" class="btn btn-default" ng-click="vm.createRect()">NICE</button>
+<button type="button" class="btn btn-default" ng-click="vm.createRect()">RECT</button>
+<button type="button" class="btn btn-default" ng-click="vm.createCircle()">CIRCLE</button>
+<button type="button" class="btn btn-default" ng-click="vm.createLink()">LINK</button>
+<button type="button" class="btn btn-default" ng-click="vm.clear()">CLEAR</button>
 
 <div id="paper"></div>
 
