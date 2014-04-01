@@ -1,30 +1,26 @@
-var Shape = (function () {
-    function Shape(el) {
-        this.el = el;
-    }
-    Shape.prototype.setText = function (text) {
-        this.text = text;
-        this.el.attr({
-            text: { text: text }
-        });
-    };
-    return Shape;
-})();
+var services = angular.module('services', []);
+var NodeType;
+(function (NodeType) {
+    NodeType[NodeType["Action"] = 0] = "Action";
+    NodeType[NodeType["Condition"] = 1] = "Condition";
+    NodeType[NodeType["Final"] = 2] = "Final";
+    NodeType[NodeType["Initial"] = 3] = "Initial";
+})(NodeType || (NodeType = {}));
 var Controllers;
 (function (Controllers) {
     var diagramCtrl = (function () {
-        function diagramCtrl($scope) {
+        function diagramCtrl($scope, validateService) {
             this.graph = new joint.dia.Graph();
             this.paper = new joint.dia.Paper({
                 el: $('#paper'),
                 width: 600,
-                height: 300,
+                height: 320,
                 gridSize: 1,
                 model: this.graph
             });
-            this.msg = "hello";
             this.shapesList = [];
             $scope.vm = this;
+            this.validateService = validateService;
 
             this.paper.on('cell:pointerdblclick', function (cellView, evt, x, y) {
                 $('#properties').attr("class", "col-md-6");
@@ -44,6 +40,7 @@ var Controllers;
                         alert("Current Shape is not defined");
                     } else {
                         $scope.vm.currentShape.el.remove();
+                        $scope.vm.shapeList.splice($scope.vm.currentShape, $scope.vm.shapeList.indexOf($scope.vm.currentShape));
                         $scope.vm.close();
                     }
                 }
@@ -81,52 +78,80 @@ var Controllers;
         diagramCtrl.prototype.close = function () {
             $('#properties').attr("class", "col-md-6 hidden");
         };
+
+        diagramCtrl.prototype.validate = function () {
+            alert(this.validateService.validate(this.shapesList, this.graph));
+        };
         return diagramCtrl;
     })();
     Controllers.diagramCtrl = diagramCtrl;
 })(Controllers || (Controllers = {}));
-angular.module('diagram', ['controllers', 'directives']);
+angular.module('diagram', ['controllers', 'services', 'directives']);
 var directives = angular.module('directives', []);
-var __extends = this.__extends || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    __.prototype = b.prototype;
-    d.prototype = new __();
-};
-var ActionNode = (function (_super) {
-    __extends(ActionNode, _super);
+var ActionNode = (function () {
     function ActionNode(el) {
-        _super.call(this, el);
+        this.el = el;
+        this.type = NodeType.Action;
     }
-    return ActionNode;
-})(Shape);
-var ConditionNode = (function (_super) {
-    __extends(ConditionNode, _super);
-    function ConditionNode(el) {
-        _super.call(this, el);
-    }
-    ConditionNode.prototype.setText = function (text) {
-        console.log("updating");
+    ActionNode.prototype.setText = function (text) {
+        this.text = text;
         this.el.attr({
-            '.label': { text: 'hello', 'ref-x': .3 / 2, 'ref-y': .3 }
+            '.label': { text: text, 'ref-x': .2, 'ref-y': .9 / 2 }
         });
     };
+    ActionNode.prototype.getElement = function () {
+        return this.el;
+    };
+    return ActionNode;
+})();
+var ConditionNode = (function () {
+    function ConditionNode(el) {
+        this.el = el;
+        this.type = NodeType.Condition;
+    }
+    ConditionNode.prototype.setText = function (text) {
+        this.text = text;
+        this.el.attr({
+            '.label': { text: text, 'ref-x': .3, 'ref-y': .4 }
+        });
+    };
+    ConditionNode.prototype.getElement = function () {
+        return this.el;
+    };
     return ConditionNode;
-})(Shape);
-var FinalNode = (function (_super) {
-    __extends(FinalNode, _super);
+})();
+var FinalNode = (function () {
     function FinalNode(el) {
-        _super.call(this, el);
+        this.el = el;
+        this.type = NodeType.Final;
     }
+    FinalNode.prototype.setText = function (text) {
+        this.text = text;
+        this.el.attr({
+            '.label': { text: text, 'ref-x': .7 / 2, 'ref-y': .4 }
+        });
+    };
+    FinalNode.prototype.getElement = function () {
+        return this.el;
+    };
     return FinalNode;
-})(Shape);
-var InitialNode = (function (_super) {
-    __extends(InitialNode, _super);
+})();
+var InitialNode = (function () {
     function InitialNode(el) {
-        _super.call(this, el);
+        this.el = el;
+        this.type = NodeType.Initial;
     }
+    InitialNode.prototype.setText = function (text) {
+        this.text = text;
+        this.el.attr({
+            '.label': { text: text, 'ref-x': .7 / 2, 'ref-y': .4 }
+        });
+    };
+    InitialNode.prototype.getElement = function () {
+        return this.el;
+    };
     return InitialNode;
-})(Shape);
+})();
 var ShapesFactory = (function () {
     function ShapesFactory() {
     }
@@ -190,7 +215,7 @@ var ShapesFactory = (function () {
         graph.addCell(el);
         var node = new ActionNode(el);
         node.setText("process");
-        return new ActionNode(el);
+        return node;
     };
 
     ShapesFactory.createConditionNode = function (graph) {
@@ -216,5 +241,65 @@ var ShapesFactory = (function () {
     };
     return ShapesFactory;
 })();
+var Edge = (function () {
+    function Edge(source, target) {
+        this.source = source;
+        this.target = target;
+    }
+    return Edge;
+})();
+var ValidateService = (function () {
+    function ValidateService() {
+        this.possibleEdges = [];
+
+        this.possibleEdges.push(new Edge(NodeType.Condition, NodeType.Condition));
+        this.possibleEdges.push(new Edge(NodeType.Condition, NodeType.Action));
+        this.possibleEdges.push(new Edge(NodeType.Condition, NodeType.Final));
+
+        this.possibleEdges.push(new Edge(NodeType.Initial, NodeType.Condition));
+        this.possibleEdges.push(new Edge(NodeType.Initial, NodeType.Final));
+        this.possibleEdges.push(new Edge(NodeType.Initial, NodeType.Action));
+
+        this.possibleEdges.push(new Edge(NodeType.Action, NodeType.Condition));
+        this.possibleEdges.push(new Edge(NodeType.Action, NodeType.Final));
+        this.possibleEdges.push(new Edge(NodeType.Action, NodeType.Initial));
+        this.possibleEdges.push(new Edge(NodeType.Action, NodeType.Action));
+    }
+    ValidateService.prototype.validate = function (shapes, graph) {
+        var links = graph.getLinks();
+        var res;
+        var find;
+        var th = this;
+        res = "Validation passed";
+        links.forEach(function (link) {
+            find = false;
+            var source = link.get('source');
+            var target = link.get('target');
+            var sourceType = th.getElementType(shapes, source);
+            var targetType = th.getElementType(shapes, target);
+            th.possibleEdges.forEach(function (edge) {
+                if (edge.source == sourceType && edge.target == targetType) {
+                    find = true;
+                }
+            });
+            if (!find) {
+                res = "Cant accept edge from " + NodeType[sourceType] + " to " + NodeType[targetType];
+            }
+        });
+        return res;
+    };
+
+    ValidateService.prototype.getElementType = function (shapes, el) {
+        var type;
+        shapes.forEach(function (shape) {
+            if (shape.getElement().id == el.id) {
+                type = shape.type;
+            }
+        });
+        return type;
+    };
+    return ValidateService;
+})();
+services.service('validateService', ValidateService);
 angular.module('controllers', []).controller(Controllers);
 //# sourceMappingURL=out.js.map

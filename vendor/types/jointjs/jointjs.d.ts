@@ -31,6 +31,8 @@ declare module joint {
             disconnectLinks(cell:Cell);
 
             removeLinks(cell:Cell);
+
+            getLinks();
         }
 
         class Cell extends Backbone.Model {

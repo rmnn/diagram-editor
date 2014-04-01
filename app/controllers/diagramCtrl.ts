@@ -5,18 +5,19 @@ module Controllers {
         graph = new joint.dia.Graph;
         paper = new joint.dia.Paper({ el: $('#paper'),
             width: 600,
-            height: 300,
+            height: 320,
             gridSize: 1,
             model: this.graph
         });
-        msg = "hello";
 
         shapesList:Shape[] = [];
         currentShape:Shape;
-        toDelete:Shape;
 
-        constructor($scope) {
+        validateService:ValidateService;
+
+        constructor($scope, validateService:ValidateService) {
             $scope.vm = this;
+            this.validateService = validateService;
 
             this.paper.on('cell:pointerdblclick',
                 function (cellView, evt, x, y) {
@@ -38,12 +39,14 @@ module Controllers {
                         alert("Current Shape is not defined");
                     } else {
                         $scope.vm.currentShape.el.remove();
+                        $scope.vm.shapeList.splice($scope.vm.currentShape, $scope.vm.shapeList.indexOf($scope.vm.currentShape));
                         $scope.vm.close();
                     }
                 }
+
+
             })
         }
-
 
         createFinalNode() {
             this.shapesList.push(ShapesFactory.createFinalNode(this.graph));
@@ -61,11 +64,9 @@ module Controllers {
             this.shapesList.push(ShapesFactory.createConditionNode(this.graph));
         }
 
-
         clear() {
             this.graph.clear();
         }
-
 
         updateValues() {
             this.currentShape.property1 = $('#property1').val();
@@ -80,9 +81,12 @@ module Controllers {
             $('#alert').append('<button type="button" class="close" data-dismiss="alert">&times;</button>')
         }
 
-
         close() {
             $('#properties').attr("class", "col-md-6 hidden");
+        }
+
+        validate() {
+            alert(this.validateService.validate(this.shapesList, this.graph));
         }
     }
 }

@@ -1,13 +1,22 @@
-class ConditionNode extends Shape {
+class ConditionNode implements Shape {
+    type:NodeType;
+    property1:string;
+    property2:string;
+    text:string;
+    el:joint.shapes.devs.Diamond;
 
     constructor(el:joint.shapes.devs.Diamond) {
-        super(el);
+        this.el = el;
+        this.type = NodeType.Condition;
     }
 
     setText(text:string) {
-        console.log("updating");
+        this.text = text;
         this.el.attr({
-            '.label': { text: 'hello', 'ref-x': .3 / 2, 'ref-y': .3 }
+            '.label': { text: text, 'ref-x': .3, 'ref-y': .4 }
         });
+    }
+    getElement() {
+        return this.el;
     }
 }

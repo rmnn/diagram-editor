@@ -43,7 +43,7 @@ class ShapesFactory {
         });
         graph.addCell(el);
         var node = new InitialNode(el);
-        node.setText("Initial")
+        node.setText("Initial");
         return node;
     }
 
@@ -56,7 +56,7 @@ class ShapesFactory {
         graph.addCell(el);
         var node = new ActionNode(el);
         node.setText("process");
-        return new ActionNode(el);
+        return node;
     }
 
     static createConditionNode(graph:joint.dia.Graph) {
@@ -80,6 +80,4 @@ class ShapesFactory {
         node.setText("123");
         return node;
     }
-
-
 }
