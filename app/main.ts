@@ -1,3 +1,3 @@
 /// <reference path="./reference.ts" />
 
-angular.module('diagram', ['controllers']);
+angular.module('diagram', ['controllers', 'directives']);

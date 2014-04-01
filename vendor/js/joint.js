@@ -133,7 +133,7 @@
                         // scripts is true for back-compat
                         jQuery.merge(this, jQuery.parseHTML(
                             match[1],
-                            context && context.nodeType ? context.ownerDocument || context : document,
+                                context && context.nodeType ? context.ownerDocument || context : document,
                             true
                         ));
 
@@ -625,7 +625,7 @@
             if (arr != null) {
                 if (isArraylike(Object(arr))) {
                     jQuery.merge(ret,
-                        typeof arr === "string" ?
+                            typeof arr === "string" ?
                             [ arr ] : arr
                     );
                 } else {
@@ -1017,10 +1017,10 @@
                 return high !== high || escapedWhitespace ?
                     escaped :
                     // BMP codepoint
-                    high < 0 ?
-                        String.fromCharCode(high + 0x10000) :
-                        // Supplemental Plane codepoint (surrogate pair)
-                        String.fromCharCode(high >> 10 | 0xD800, high & 0x3FF | 0xDC00);
+                        high < 0 ?
+                    String.fromCharCode(high + 0x10000) :
+                    // Supplemental Plane codepoint (surrogate pair)
+                    String.fromCharCode(high >> 10 | 0xD800, high & 0x3FF | 0xDC00);
             };
 
 // Optimize for push.apply( _, NodeList )
@@ -1237,7 +1237,7 @@
             var cur = b && a,
                 diff = cur && a.nodeType === 1 && b.nodeType === 1 &&
                     ( ~b.sourceIndex || MAX_NEGATIVE ) -
-                        ( ~a.sourceIndex || MAX_NEGATIVE );
+                    ( ~a.sourceIndex || MAX_NEGATIVE );
 
             // Use IE sourceIndex if available on both nodes
             if (diff) {
@@ -1618,12 +1618,12 @@
                         // Parentless nodes are either documents or disconnected
                     } else if (!aup || !bup) {
                         return a === doc ? -1 :
-                            b === doc ? 1 :
-                                aup ? -1 :
-                                    bup ? 1 :
-                                        sortInput ?
-                                            ( indexOf.call(sortInput, a) - indexOf.call(sortInput, b) ) :
-                                            0;
+                                b === doc ? 1 :
+                            aup ? -1 :
+                                bup ? 1 :
+                                    sortInput ?
+                                        ( indexOf.call(sortInput, a) - indexOf.call(sortInput, b) ) :
+                                        0;
 
                         // If the nodes are siblings, we can do a quick check
                     } else if (aup === bup) {
@@ -1650,9 +1650,9 @@
                         siblingCheck(ap[i], bp[i]) :
 
                         // Otherwise nodes in our document sort first
-                        ap[i] === preferredDoc ? -1 :
+                            ap[i] === preferredDoc ? -1 :
                             bp[i] === preferredDoc ? 1 :
-                                0;
+                        0;
                 };
 
             return doc;
@@ -1713,11 +1713,11 @@
                     undefined;
 
             return val === undefined ?
-                support.attributes || !documentIsHTML ?
-                    elem.getAttribute(name) :
+                    support.attributes || !documentIsHTML ?
+                elem.getAttribute(name) :
                     (val = elem.getAttributeNode(name)) && val.specified ?
-                        val.value :
-                        null :
+                val.value :
+                null :
                 val;
         };
 
@@ -1902,9 +1902,9 @@
 
                     return pattern ||
                         (pattern = new RegExp("(^|" + whitespace + ")" + className + "(" + whitespace + "|$)")) &&
-                            classCache(className, function (elem) {
-                                return pattern.test(typeof elem.className === "string" && elem.className || typeof elem.getAttribute !== strundefined && elem.getAttribute("class") || "");
-                            });
+                        classCache(className, function (elem) {
+                            return pattern.test(typeof elem.className === "string" && elem.className || typeof elem.getAttribute !== strundefined && elem.getAttribute("class") || "");
+                        });
                 },
 
                 "ATTR": function (name, operator, check) {
@@ -1921,13 +1921,13 @@
                         result += "";
 
                         return operator === "=" ? result === check :
-                            operator === "!=" ? result !== check :
+                                operator === "!=" ? result !== check :
                                 operator === "^=" ? check && result.indexOf(check) === 0 :
-                                    operator === "*=" ? check && result.indexOf(check) > -1 :
-                                        operator === "$=" ? check && result.slice(-check.length) === check :
-                                            operator === "~=" ? ( " " + result + " " ).indexOf(check) > -1 :
-                                                operator === "|=" ? result === check || result.slice(0, check.length + 1) === check + "-" :
-                                                    false;
+                                operator === "*=" ? check && result.indexOf(check) > -1 :
+                                operator === "$=" ? check && result.slice(-check.length) === check :
+                                operator === "~=" ? ( " " + result + " " ).indexOf(check) > -1 :
+                                operator === "|=" ? result === check || result.slice(0, check.length + 1) === check + "-" :
+                            false;
                     };
                 },
 
@@ -2459,13 +2459,13 @@
 
                     matcherOut = matcher ?
                         // If we have a postFinder, or filtered seed, or non-seed postFilter or preexisting results,
-                        postFinder || ( seed ? preFilter : preexisting || postFilter ) ?
+                            postFinder || ( seed ? preFilter : preexisting || postFilter ) ?
 
-                            // ...intermediate processing is necessary
-                            [] :
+                        // ...intermediate processing is necessary
+                        [] :
 
-                            // ...otherwise use results directly
-                            results :
+                        // ...otherwise use results directly
+                        results :
                         matcherIn;
 
                 // Find primary matches
@@ -2516,7 +2516,7 @@
                     // Add elements to results, through postFinder if defined
                 } else {
                     matcherOut = condense(
-                        matcherOut === results ?
+                            matcherOut === results ?
                             matcherOut.splice(preexisting, matcherOut.length) :
                             matcherOut
                     );
@@ -2566,15 +2566,15 @@
                             }
                         }
                         return setMatcher(
-                            i > 1 && elementMatcher(matchers),
-                            i > 1 && toSelector(
+                                i > 1 && elementMatcher(matchers),
+                                i > 1 && toSelector(
                                 // If the preceding token was a descendant combinator, insert an implicit any-element `*`
                                 tokens.slice(0, i - 1).concat({ value: tokens[ i - 2 ].type === " " ? "*" : "" })
                             ).replace(rtrim, "$1"),
                             matcher,
-                            i < j && matcherFromTokens(tokens.slice(i, j)),
-                            j < len && matcherFromTokens((tokens = tokens.slice(j))),
-                            j < len && toSelector(tokens)
+                                i < j && matcherFromTokens(tokens.slice(i, j)),
+                                j < len && matcherFromTokens((tokens = tokens.slice(j))),
+                                j < len && toSelector(tokens)
                         );
                     }
                     matchers.push(matcher);
@@ -2755,7 +2755,7 @@
                             // Search, expanding context for leading sibling combinators
                             if ((seed = find(
                                 token.matches[0].replace(runescape, funescape),
-                                rsibling.test(tokens[0].type) && context.parentNode || context
+                                    rsibling.test(tokens[0].type) && context.parentNode || context
                             ))) {
 
                                 // If seed is empty or no tokens remain, we can return early
@@ -2842,7 +2842,7 @@
                 if (!isXML) {
                     return (val = elem.getAttributeNode(name)) && val.specified ?
                         val.value :
-                        elem[ name ] === true ? name.toLowerCase() : null;
+                            elem[ name ] === true ? name.toLowerCase() : null;
                 }
             });
         }
@@ -3495,7 +3495,7 @@
         },
         hasData: function (owner) {
             return !jQuery.isEmptyObject(
-                this.cache[ owner[ this.expando ] ] || {}
+                    this.cache[ owner[ this.expando ] ] || {}
             );
         },
         discard: function (owner) {
@@ -3647,12 +3647,12 @@
             if (typeof data === "string") {
                 try {
                     data = data === "true" ? true :
-                        data === "false" ? false :
+                            data === "false" ? false :
                             data === "null" ? null :
-                                // Only convert to a number if it doesn't change the string
-                                +data + "" === data ? +data :
-                                    rbrace.test(data) ? JSON.parse(data) :
-                                        data;
+                        // Only convert to a number if it doesn't change the string
+                            +data + "" === data ? +data :
+                        rbrace.test(data) ? JSON.parse(data) :
+                            data;
                 } catch (e) {
                 }
 
@@ -3990,7 +3990,7 @@
                         // handle most common string cases
                         ret.replace(rreturn, "") :
                         // handle cases where value is null/undef or number
-                        ret == null ? "" : ret;
+                            ret == null ? "" : ret;
                 }
 
                 return;
@@ -4253,11 +4253,11 @@
                     undefined :
                     /* jshint eqeqeq: false */
                     // Temporarily disable this handler to check existence
-                    (jQuery.expr.attrHandle[ name ] = undefined) !=
-                        getter(elem, name, isXML) ?
+                        (jQuery.expr.attrHandle[ name ] = undefined) !=
+                    getter(elem, name, isXML) ?
 
-                        name.toLowerCase() :
-                        null;
+                    name.toLowerCase() :
+                    null;
 
             // Restore handler
             jQuery.expr.attrHandle[ name ] = fn;
@@ -5208,7 +5208,7 @@
 
                 // If this is a positional/relative selector, check membership in the returned set
                 // so $("p:first").is("p:last") won't return true for a doc with two "p".
-                typeof selector === "string" && rneedsContext.test(selector) ?
+                    typeof selector === "string" && rneedsContext.test(selector) ?
                     jQuery(selector) :
                     selector || [],
                 false
@@ -5232,7 +5232,7 @@
 
                         // Don't pass non-elements to Sizzle
                         cur.nodeType === 1 &&
-                            jQuery.find.matchesSelector(cur, selectors))) {
+                        jQuery.find.matchesSelector(cur, selectors))) {
 
                         cur = matched.push(cur);
                         break;
@@ -5276,7 +5276,7 @@
 
         addBack: function (selector) {
             return this.add(selector == null ?
-                this.prevObject : this.prevObject.filter(selector)
+                    this.prevObject : this.prevObject.filter(selector)
             );
         }
     });
@@ -5912,7 +5912,7 @@
             jQuery.nodeName(content.nodeType === 1 ? content : content.firstChild, "tr") ?
 
             elem.getElementsByTagName("tbody")[0] ||
-                elem.appendChild(elem.ownerDocument.createElement("tbody")) :
+            elem.appendChild(elem.ownerDocument.createElement("tbody")) :
             elem;
     }
 
@@ -6413,7 +6413,7 @@
                 // If we already have the right measurement, avoid augmentation
                 4 :
                 // Otherwise initialize for horizontal or vertical properties
-                name === "width" ? 1 : 0,
+                    name === "width" ? 1 : 0,
 
             val = 0;
 
@@ -6483,7 +6483,7 @@
             augmentWidthOrHeight(
                 elem,
                 name,
-                extra || ( isBorderBox ? "border" : "content" ),
+                    extra || ( isBorderBox ? "border" : "content" ),
                 valueIsBorderBox,
                 styles
             )
@@ -6547,13 +6547,13 @@
             set: function (elem, value, extra) {
                 var styles = extra && getStyles(elem);
                 return setPositiveNumber(elem, value, extra ?
-                    augmentWidthOrHeight(
-                        elem,
-                        name,
-                        extra,
-                        jQuery.support.boxSizing && jQuery.css(elem, "boxSizing", false, styles) === "border-box",
-                        styles
-                    ) : 0
+                        augmentWidthOrHeight(
+                            elem,
+                            name,
+                            extra,
+                                jQuery.support.boxSizing && jQuery.css(elem, "boxSizing", false, styles) === "border-box",
+                            styles
+                        ) : 0
                 );
             }
         };
@@ -6938,21 +6938,21 @@
                 data: params
             }).done(function (responseText) {
 
-                    // Save response for use in complete callback
-                    response = arguments;
+                // Save response for use in complete callback
+                response = arguments;
 
-                    self.html(selector ?
+                self.html(selector ?
 
-                        // If a selector was specified, locate the right elements in a dummy div
-                        // Exclude scripts to avoid IE 'Permission Denied' errors
-                        jQuery("<div>").append(jQuery.parseHTML(responseText)).find(selector) :
+                    // If a selector was specified, locate the right elements in a dummy div
+                    // Exclude scripts to avoid IE 'Permission Denied' errors
+                    jQuery("<div>").append(jQuery.parseHTML(responseText)).find(selector) :
 
-                        // Otherwise use the full result
-                        responseText);
+                    // Otherwise use the full result
+                    responseText);
 
-                }).complete(callback && function (jqXHR, status) {
-                    self.each(callback, response || [ jqXHR.responseText, status, jqXHR ]);
-                });
+            }).complete(callback && function (jqXHR, status) {
+                self.each(callback, response || [ jqXHR.responseText, status, jqXHR ]);
+            });
         }
 
         return this;
@@ -7197,7 +7197,7 @@
                 s.crossDomain = !!( parts &&
                     ( parts[ 1 ] !== ajaxLocParts[ 1 ] || parts[ 2 ] !== ajaxLocParts[ 2 ] ||
                         ( parts[ 3 ] || ( parts[ 1 ] === "http:" ? "80" : "443" ) ) !==
-                            ( ajaxLocParts[ 3 ] || ( ajaxLocParts[ 1 ] === "http:" ? "80" : "443" ) ) )
+                        ( ajaxLocParts[ 3 ] || ( ajaxLocParts[ 1 ] === "http:" ? "80" : "443" ) ) )
                     );
             }
 
@@ -7272,7 +7272,7 @@
             // Set the Accepts header for the server, depending on the dataType
             jqXHR.setRequestHeader(
                 "Accept",
-                s.dataTypes[ 0 ] && s.accepts[ s.dataTypes[0] ] ?
+                    s.dataTypes[ 0 ] && s.accepts[ s.dataTypes[0] ] ?
                     s.accepts[ s.dataTypes[0] ] + ( s.dataTypes[ 0 ] !== "*" ? ", " + allTypes + "; q=0.01" : "" ) :
                     s.accepts[ "*" ]
             );
@@ -7663,15 +7663,15 @@
                         charset: s.scriptCharset,
                         src: s.url
                     }).on(
-                            "load error",
-                            callback = function (evt) {
-                                script.remove();
-                                callback = null;
-                                if (evt) {
-                                    complete(evt.type === "error" ? 404 : 200, evt.type);
-                                }
+                        "load error",
+                        callback = function (evt) {
+                            script.remove();
+                            callback = null;
+                            if (evt) {
+                                complete(evt.type === "error" ? 404 : 200, evt.type);
                             }
-                        );
+                        }
+                    );
                     document.head.appendChild(script[ 0 ]);
                 },
                 abort: function () {
@@ -7837,17 +7837,17 @@
                                 } else if (type === "error") {
                                     complete(
                                         // file protocol always yields status 0, assume 404
-                                        xhr.status || 404,
+                                            xhr.status || 404,
                                         xhr.statusText
                                     );
                                 } else {
                                     complete(
-                                        xhrSuccessStatus[ xhr.status ] || xhr.status,
+                                            xhrSuccessStatus[ xhr.status ] || xhr.status,
                                         xhr.statusText,
                                         // Support: IE9
                                         // #11426: When requesting binary data, IE9 will throw an exception
                                         // on any attempt to access responseText
-                                        typeof xhr.responseText === "string" ? {
+                                            typeof xhr.responseText === "string" ? {
                                             text: xhr.responseText
                                         } : undefined,
                                         xhr.getAllResponseHeaders()
@@ -7997,7 +7997,7 @@
                 tweens: [],
                 createTween: function (prop, end) {
                     var tween = jQuery.Tween(elem, animation.opts, prop, end,
-                        animation.opts.specialEasing[ prop ] || animation.opts.easing);
+                            animation.opts.specialEasing[ prop ] || animation.opts.easing);
                     animation.tweens.push(tween);
                     return tween;
                 },
@@ -8514,7 +8514,7 @@
         };
 
         opt.duration = jQuery.fx.off ? 0 : typeof opt.duration === "number" ? opt.duration :
-            opt.duration in jQuery.fx.speeds ? jQuery.fx.speeds[ opt.duration ] : jQuery.fx.speeds._default;
+                opt.duration in jQuery.fx.speeds ? jQuery.fx.speeds[ opt.duration ] : jQuery.fx.speeds._default;
 
         // normalize opt.queue - true/undefined/null -> "fx"
         if (opt.queue == null || opt.queue === true) {
@@ -8600,7 +8600,7 @@
 
     if (jQuery.expr && jQuery.expr.filters) {
         jQuery.expr.filters.animated = function (elem) {
-            return jQuery.grep(jQuery.timers,function (fn) {
+            return jQuery.grep(jQuery.timers, function (fn) {
                 return elem === fn.elem;
             }).length;
         };
@@ -8890,11 +8890,11 @@
         // whitespace
         ' \t\x0B\f\xA0\ufeff' +
 
-            // line terminators
-            '\n\r\u2028\u2029' +
+        // line terminators
+        '\n\r\u2028\u2029' +
 
-            // unicode category "Zs" space separators
-            '\u1680\u180e\u2000\u2001\u2002\u2003\u2004\u2005\u2006\u2007\u2008\u2009\u200a\u202f\u205f\u3000'
+        // unicode category "Zs" space separators
+        '\u1680\u180e\u2000\u2001\u2002\u2003\u2004\u2005\u2006\u2007\u2008\u2009\u200a\u202f\u205f\u3000'
         );
 
     /** Used to match empty string literals in compiled template source */
@@ -9323,9 +9323,9 @@
 
         /** Used to detect if a method is native */
         var reNative = RegExp('^' +
-            String(objectProto.valueOf)
-                .replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
-                .replace(/valueOf|for [^\]]+/g, '.+?') + '$'
+                String(objectProto.valueOf)
+                    .replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+                    .replace(/valueOf|for [^\]]+/g, '.+?') + '$'
         );
 
         /** Native method shortcuts */
@@ -9844,7 +9844,7 @@
                 // non `Object` object instances with different constructors are not equal
                 if (ctorA != ctorB && !(
                     isFunction(ctorA) && ctorA instanceof ctorA &&
-                        isFunction(ctorB) && ctorB instanceof ctorB
+                    isFunction(ctorB) && ctorB instanceof ctorB
                     )) {
                     return false;
                 }
@@ -14682,7 +14682,7 @@
 
             // compile the regexp to match each delimiter
             var reDelimiters = RegExp(
-                (options.escape || reNoMatch).source + '|' +
+                    (options.escape || reNoMatch).source + '|' +
                     interpolate.source + '|' +
                     (interpolate === reInterpolate ? reEsTemplate : reNoMatch).source + '|' +
                     (options.evaluate || reNoMatch).source + '|$'
@@ -17406,7 +17406,7 @@ if (typeof exports === 'object') {
 
     if (typeof define === 'function' && define.amd) {
         // AMD. Register as an anonymous module.
-        define(['./../'], factory);
+        define(['lodash'], factory);
 
     } else {
         // Browser globals.
@@ -18256,7 +18256,7 @@ if (typeof exports === 'object') {
         // @return {point} my midpoint
         midpoint: function () {
             return point((this.start.x + this.end.x) / 2,
-                (this.start.y + this.end.y) / 2);
+                    (this.start.y + this.end.y) / 2);
         },
         // @return {point} Point where I'm intersecting l.
         // @see Squeak Smalltalk, LineSegment>>intersectionWith:
@@ -18284,7 +18284,7 @@ if (typeof exports === 'object') {
                 }
             }
             return point(this.start.x + (alpha * pt1Dir.x / det),
-                this.start.y + (alpha * pt1Dir.y / det));
+                    this.start.y + (alpha * pt1Dir.y / det));
         }
     };
 
@@ -18514,10 +18514,10 @@ if (typeof exports === 'object') {
             if (n == 1) {
                 // 3P1 = 2P0 + P3
                 firstControlPoints[0] = point((2 * knots[0].x + knots[1].x) / 3,
-                    (2 * knots[0].y + knots[1].y) / 3);
+                        (2 * knots[0].y + knots[1].y) / 3);
                 // P2 = 2P1 – P0
                 secondControlPoints[0] = point(2 * firstControlPoints[0].x - knots[0].x,
-                    2 * firstControlPoints[0].y - knots[0].y);
+                        2 * firstControlPoints[0].y - knots[0].y);
                 return [firstControlPoints, secondControlPoints];
             }
 
@@ -18550,10 +18550,10 @@ if (typeof exports === 'object') {
                 // Second control point.
                 if (i < n - 1) {
                     secondControlPoints.push(point(2 * knots [i + 1].x - x[i + 1],
-                        2 * knots[i + 1].y - y[i + 1]));
+                            2 * knots[i + 1].y - y[i + 1]));
                 } else {
                     secondControlPoints.push(point((knots[n].x + x[n - 1]) / 2,
-                        (knots[n].y + y[n - 1]) / 2));
+                            (knots[n].y + y[n - 1]) / 2));
                 }
             }
             return [firstControlPoints, secondControlPoints];
@@ -19313,17 +19313,17 @@ joint.dia.Cell = Backbone.Model.extend({
 
         _(this._transitionIds).keys().filter(pathArray && function (key) {
 
-                return _.isEqual(pathArray, key.split(delim).slice(0, pathArray.length));
+            return _.isEqual(pathArray, key.split(delim).slice(0, pathArray.length));
 
-            }).each(function (key) {
+        }).each(function (key) {
 
-                joint.util.cancelFrame(this._transitionIds[key]);
+            joint.util.cancelFrame(this._transitionIds[key]);
 
-                delete this._transitionIds[key];
+            delete this._transitionIds[key];
 
-                this.trigger('transition:end', this, key);
+            this.trigger('transition:end', this, key);
 
-            }, this);
+        }, this);
     }
 });
 
@@ -19529,11 +19529,11 @@ joint.dia.CellView = Backbone.View.extend({
         if (!this.paper.svg.getElementById(gradientId)) {
 
             var gradientSVGString = [
-                '<' + gradient.type + '>',
-                _.map(gradient.stops,function (stop) {
+                    '<' + gradient.type + '>',
+                _.map(gradient.stops, function (stop) {
                     return '<stop offset="' + stop.offset + '" stop-color="' + stop.color + '" stop-opacity="' + (_.isFinite(stop.opacity) ? stop.opacity : 1) + '" />'
                 }).join(''),
-                '</' + gradient.type + '>'
+                    '</' + gradient.type + '>'
             ].join('');
 
             var gradientElement = V(gradientSVGString);
@@ -20090,7 +20090,7 @@ joint.dia.ElementView = joint.dia.CellView.extend({
 
         if ( // target is a valid magnet start linking
             evt.target.getAttribute('magnet') &&
-                this.paper.options.validateMagnet.call(this.paper, this, evt.target)
+            this.paper.options.validateMagnet.call(this.paper, this, evt.target)
             ) {
             this.model.trigger('batch:start');
 
@@ -20136,8 +20136,8 @@ joint.dia.ElementView = joint.dia.CellView.extend({
                 // Make sure the new element's position always snaps to the current grid after
                 // translate as the previous one could be calculated with a different grid size.
                 this.model.translate(
-                    g.snapToGrid(position.x, grid) - position.x + g.snapToGrid(x - this._dx, grid),
-                    g.snapToGrid(position.y, grid) - position.y + g.snapToGrid(y - this._dy, grid)
+                        g.snapToGrid(position.x, grid) - position.x + g.snapToGrid(x - this._dx, grid),
+                        g.snapToGrid(position.y, grid) - position.y + g.snapToGrid(y - this._dy, grid)
                 );
             }
 
@@ -20540,13 +20540,13 @@ joint.dia.LinkView = joint.dia.CellView.extend({
         this._sourcePoint = this.getConnectionPoint(
             'source',
             this.model.get('source'),
-            this._firstVertex || this.model.get('target')).round();
+                this._firstVertex || this.model.get('target')).round();
 
         this._lastVertex = _.last(vertices);
         this._targetPoint = this.getConnectionPoint(
             'target',
             this.model.get('target'),
-            this._lastVertex || this._sourcePoint
+                this._lastVertex || this._sourcePoint
         );
 
         // Make the markers "point" to their sticky points being auto-oriented towards
@@ -20554,7 +20554,7 @@ joint.dia.LinkView = joint.dia.CellView.extend({
         if (this._V.markerSource) {
             this._V.markerSource.translateAndAutoOrient(
                 this._sourcePoint,
-                this._firstVertex || this._targetPoint,
+                    this._firstVertex || this._targetPoint,
                 this.paper.viewport
             );
         }
@@ -20562,7 +20562,7 @@ joint.dia.LinkView = joint.dia.CellView.extend({
         if (this._V.markerTarget) {
             this._V.markerTarget.translateAndAutoOrient(
                 this._targetPoint,
-                this._lastVertex || this._sourcePoint,
+                    this._lastVertex || this._sourcePoint,
                 this.paper.viewport
             );
         }
@@ -20650,13 +20650,13 @@ joint.dia.LinkView = joint.dia.CellView.extend({
         // Make the markers "point" to their sticky points being auto-oriented towards `targetPosition`/`sourcePosition`.
         this._sourceArrowhead.translateAndAutoOrient(
             this._sourcePoint,
-            this._firstVertex || this._targetPoint,
+                this._firstVertex || this._targetPoint,
             this.paper.viewport
         );
 
         this._targetArrowhead.translateAndAutoOrient(
             this._targetPoint,
-            this._lastVertex || this._sourcePoint,
+                this._lastVertex || this._sourcePoint,
             this.paper.viewport
         );
 
@@ -20834,16 +20834,16 @@ joint.dia.LinkView = joint.dia.CellView.extend({
         if (this._V.markerSource) {
             this._markerSourceBbox = this._markerSourceBbox || this._V.markerSource.bbox(true);
             sourcePoint.move(
-                this._firstVertex || targetPoint,
-                this._markerSourceBbox.width * -this._V.markerSource.scale().sx
+                    this._firstVertex || targetPoint,
+                    this._markerSourceBbox.width * -this._V.markerSource.scale().sx
             );
         }
 
         if (this._V.markerTarget) {
             this._markerTargetBbox = this._markerTargetBbox || this._V.markerTarget.bbox(true);
             targetPoint.move(
-                this._lastVertex || sourcePoint,
-                this._markerTargetBbox.width * -this._V.markerTarget.scale().sx
+                    this._lastVertex || sourcePoint,
+                    this._markerTargetBbox.width * -this._V.markerTarget.scale().sx
             );
         }
 
@@ -21926,6 +21926,7 @@ joint.shapes.basic.Circle = joint.shapes.basic.Generic.extend({
     }, joint.shapes.basic.Generic.prototype.defaults)
 });
 
+
 joint.shapes.basic.Image = joint.shapes.basic.Generic.extend({
 
     markup: '<g class="rotatable"><g class="scalable"><image/></g><text/></g>',
@@ -21938,6 +21939,7 @@ joint.shapes.basic.Image = joint.shapes.basic.Generic.extend({
         }
     }, joint.shapes.basic.Generic.prototype.defaults)
 });
+
 
 joint.shapes.basic.Path = joint.shapes.basic.Generic.extend({
 
@@ -22166,4 +22168,217 @@ joint.shapes.basic.TextBlock = joint.shapes.basic.Rect.extend({
 if (typeof exports === 'object') {
 
     module.exports = joint.shapes.basic;
+}
+
+
+/*! JointJS v0.8.1 - JavaScript diagramming library  2014-02-24
+
+
+ This Source Code Form is subject to the terms of the Mozilla Public
+ License, v. 2.0. If a copy of the MPL was not distributed with this
+ file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
+if (typeof exports === 'object') {
+
+    var joint = {
+        util: require('../src/core').util,
+        shapes: {
+            basic: require('./joint.shapes.basic')
+        },
+        dia: {
+            ElementView: require('../src/joint.dia.element').ElementView,
+            Link: require('../src/joint.dia.link').Link
+        }
+    };
+    var _ = require('lodash');
+}
+
+joint.shapes.devs = {};
+
+joint.shapes.devs.Model = joint.shapes.basic.Generic.extend(_.extend({}, joint.shapes.basic.PortsModelInterface, {
+
+    markup: '<g class="rotatable"><g class="scalable"><rect class ="outer"/></g><text class="label"/><g class="inPorts"/><g class="outPorts"/></g>',
+    portMarkup: '<g class="port<%= id %>"><circle/><text/></g>',
+
+    defaults: joint.util.deepSupplement({
+
+        type: 'devs.Model',
+        size: { width: 1, height: 1 },
+
+        inPorts: [],
+        outPorts: [],
+
+        attrs: {
+            '.': { magnet: false },
+            rect: {
+                width: 300, height: 150
+            },
+            '.outer': {
+                cx: 0, cy: 0, rx: 0, ry: 0,
+                fill: '$#ffffff', 'stroke-style': 'solid', stroke: '#000000', 'stroke-width': 1
+            },
+            circle: {
+                r: 5,
+                magnet: true,
+                stroke: 'black'
+            },
+            text: {
+                fill: 'black',
+                'pointer-events': 'none'
+            },
+            '.label': { text: 'Text', 'ref-x': .3, 'ref-y': .3 },
+            '.inPorts text': { x: -15, dy: 4, 'text-anchor': 'end' },
+            '.outPorts text': { x: 15, dy: 4 }
+        }
+
+    }, joint.shapes.basic.Generic.prototype.defaults),
+
+    getPortAttrs: function (portName, index, total, selector, type) {
+
+        var attrs = {};
+
+        var portClass = 'port' + index;
+        var portSelector = selector + '>.' + portClass;
+        var portTextSelector = portSelector + '>text';
+        var portCircleSelector = portSelector + '>circle';
+
+        attrs[portTextSelector] = { text: portName };
+        attrs[portCircleSelector] = { port: { id: portName || _.uniqueId(type), type: type } };
+        attrs[portSelector] = { ref: 'rect', 'ref-x': (index + 0.5) * (1 / total) };
+
+        if (selector === '.outPorts') {
+            attrs[portSelector]['ref-dy'] = 0;
+        }
+
+        return attrs;
+    }
+}));
+
+
+joint.shapes.devs.Diamond = joint.shapes.basic.Generic.extend(_.extend({}, joint.shapes.basic.PortsModelInterface, {
+
+    markup: '<g class="rotatable"><g class="scalable"><rect class ="outer"/></g><text class="label"/><g class="inPorts"/><g class="outPorts"/></g>',
+    portMarkup: '<g class="port<%= id %>"><circle/><text/></g>',
+
+    defaults: joint.util.deepSupplement({
+
+        type: 'devs.Diamond',
+        size: { width: 40, height: 40 },
+
+        inPorts: [],
+        outPorts: [],
+
+        attrs: {
+            '.': { magnet: false },
+            rect: {
+                width: 300, height: 150,
+                stroke: 'black'
+            },
+            '.outer': {
+                stroke: '#D35400', 'stroke-width': 1,
+                cx: 0, cy: 0, rx: 0, ry: 0,
+                fill: '#E67E22',
+                r: 10000
+            },
+            circle: {
+                r: 5,
+                magnet: true,
+                stroke: 'black'
+            },
+            text: {
+                fill: 'black',
+                'pointer-events': 'none'
+            },
+            '.label': { text: 'hello', 'ref-x': .3 / 2, 'ref-y': .3 },
+            '.inPorts text': { x: -15, dy: 4, 'text-anchor': 'end' },
+            '.outPorts text': { x: 15, dy: 4},
+            '.inPorts circle': { fill: 'PaleGreen' },
+            '.outPorts circle': { fill: 'PaleGreen' }
+        }
+
+    }, joint.shapes.basic.Generic.prototype.defaults),
+
+    getPortAttrs: function (portName, index, total, selector, type) {
+
+        var attrs = {};
+
+        var portClass = 'port' + index;
+        var portSelector = selector + '>.' + portClass;
+        var portTextSelector = portSelector + '>text';
+        var portCircleSelector = portSelector + '>circle';
+
+        attrs[portTextSelector] = { text: portName };
+        attrs[portCircleSelector] = { port: { id: portName || _.uniqueId(type), type: type } };
+        attrs[portSelector] = { ref: 'rect', 'ref-x': index * 40 };
+
+        if (selector === '.outPorts') {
+            attrs[portSelector]['ref-dy'] = 0;
+        }
+        return attrs;
+    }
+}));
+
+
+joint.shapes.devs.EllipseWithPorts = joint.shapes.devs.Model.extend({
+
+    defaults: joint.util.deepSupplement({
+
+        type: 'devs.EllipseWithPorts',
+        size: { width: 80, height: 40 },
+        attrs: {
+            rect: {
+                width: 300, height: 150,
+                stroke: 'black'
+            },
+            '.outer': {
+                stroke: '#D35400', 'stroke-width': 2,
+                rx: 500, ry: 250,
+                fill: '#ff00ff'
+            },
+            '.label': { text: 'Text' },
+            '.inPorts circle': { fill: 'PaleGreen' },
+            '.outPorts circle': { fill: 'Tomato' }
+        }
+
+    }, joint.shapes.devs.Model.prototype.defaults)
+
+});
+
+joint.shapes.devs.RectWithPorts = joint.shapes.devs.Model.extend({
+
+    defaults: joint.util.deepSupplement({
+
+        type: 'devs.RectWithPorts',
+        size: { width: 60, height: 60 },
+        attrs: {
+            '.inPorts circle': { fill: 'PaleGreen' },
+            '.outPorts circle': { fill: 'Tomato' },
+            '.label': { text: 'Text', 'ref-x': .2, 'ref-y': .4 },
+            '.outer': {
+                stroke: '#000000', 'stroke-width': 1,
+                fill: '#f8f8f8', 'stroke-style': 'solid',
+                int: 17
+            }
+        }
+    }, joint.shapes.devs.Model.prototype.defaults)
+});
+
+joint.shapes.devs.Link = joint.dia.Link.extend({
+
+    defaults: {
+        type: 'devs.Link',
+        attrs: { '.connection': { 'stroke-width': 2 }}
+    }
+});
+
+
+joint.shapes.devs.ModelView = joint.dia.ElementView.extend(joint.shapes.basic.PortsViewInterface);
+joint.shapes.devs.EllipseWithPortsView = joint.shapes.devs.ModelView;
+joint.shapes.devs.RectWithPortsView = joint.shapes.devs.ModelView;
+joint.shapes.devs.DiamondView = joint.dia.ElementView.extend(joint.shapes.basic.PortsViewInterface);
+
+
+if (typeof exports === 'object') {
+
+    module.exports = joint.shapes.devs;
 }

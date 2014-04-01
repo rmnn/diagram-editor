@@ -143,7 +143,28 @@ declare module joint {
             }
             class Image extends Generic {
             }
+
+            class Path extends Generic {
+            }
         }
+
+        module devs {
+            class Generic extends joint.dia.Element {
+            }
+
+            class Model extends Generic {
+            }
+
+            class EllipseWithPorts extends Model {
+            }
+
+            class RectWithPorts extends Model {
+            }
+
+            class Diamond extends Generic {
+            }
+        }
+
     }
     module util {
         function uuid():string;
