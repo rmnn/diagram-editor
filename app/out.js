@@ -1,11 +1,4 @@
 var services = angular.module('services', []);
-var NodeType;
-(function (NodeType) {
-    NodeType[NodeType["Action"] = 0] = "Action";
-    NodeType[NodeType["Condition"] = 1] = "Condition";
-    NodeType[NodeType["Final"] = 2] = "Final";
-    NodeType[NodeType["Initial"] = 3] = "Initial";
-})(NodeType || (NodeType = {}));
 var Controllers;
 (function (Controllers) {
     var diagramCtrl = (function () {
@@ -14,7 +7,7 @@ var Controllers;
             this.paper = new joint.dia.Paper({
                 el: $('#paper'),
                 width: 600,
-                height: 320,
+                height: 400,
                 gridSize: 1,
                 model: this.graph
             });
@@ -23,6 +16,7 @@ var Controllers;
             this.validateService = validateService;
 
             this.paper.on('cell:pointerdblclick', function (cellView, evt, x, y) {
+                $('#action-select').remove();
                 $('#properties').attr("class", "col-md-6");
                 $scope.vm.shapesList.forEach(function (shape) {
                     if (shape.el.id == cellView.model.id) {
@@ -30,7 +24,41 @@ var Controllers;
                         $('#text').val($scope.vm.currentShape.text);
                         $('#property1').val($scope.vm.currentShape.property1);
                         $('#property2').val($scope.vm.currentShape.property2);
+                        $('#id').val($scope.vm.currentShape.id);
+                        if (shape.type == NodeType.Button) {
+                            $('#action').append($("<select>").attr("class", "form-control").attr("id", "action-select"));
+                            for (var i in ButtonAction) {
+                                if (parseInt(i, 10) >= 0) {
+                                    if (i == shape.action) {
+                                        $('#action-select').append($("<option>").attr('value', i).text(ButtonAction[i]).attr('selected', 'selected'));
+                                    } else {
+                                        $('#action-select').append($("<option>").attr('value', i).text(ButtonAction[i]));
+                                    }
+                                }
+                            }
+                        }
+                        if (shape.type == NodeType.Input) {
+                            $('#action').append($("<select>").attr("class", "form-control").attr("id", "action-select"));
+                            for (var i in InputAction) {
+                                if (parseInt(i, 10) >= 0) {
+                                    if (i == shape.action) {
+                                        $('#action-select').append($("<option>").attr('value', i).text(InputAction[i]).attr('selected', 'selected'));
+                                    } else {
+                                        $('#action-select').append($("<option>").attr('value', i).text(InputAction[i]));
+                                    }
+                                }
+                            }
+                        }
                     }
+                });
+            });
+
+            this.graph.on('add', function (link) {
+                link.on('change:source', function () {
+                    $scope.vm.validate();
+                });
+                link.on('change:target', function () {
+                    $scope.vm.validate();
                 });
             });
 
@@ -41,25 +69,31 @@ var Controllers;
                     } else {
                         $scope.vm.currentShape.el.remove();
                         $scope.vm.shapeList.splice($scope.vm.currentShape, $scope.vm.shapeList.indexOf($scope.vm.currentShape));
-                        $scope.vm.close();
                     }
                 }
             });
         }
-        diagramCtrl.prototype.createFinalNode = function () {
-            this.shapesList.push(ShapesFactory.createFinalNode(this.graph));
+        diagramCtrl.prototype.createInput = function () {
+            this.shapesList.push(ShapesFactory.createInput(this.graph, null, "Unknown"));
         };
 
-        diagramCtrl.prototype.createActionNode = function () {
-            this.shapesList.push(ShapesFactory.createActionNode(this.graph));
+        diagramCtrl.prototype.createButton = function () {
+            this.shapesList.push(ShapesFactory.createButton(this.graph, null, "Unknown"));
         };
 
         diagramCtrl.prototype.createInitialNode = function () {
             this.shapesList.push(ShapesFactory.createInitialNode(this.graph));
         };
 
-        diagramCtrl.prototype.createConditionNode = function () {
-            this.shapesList.push(ShapesFactory.createConditionNode(this.graph));
+        diagramCtrl.prototype.createLabel = function () {
+            this.shapesList.push(ShapesFactory.createLabel(this.graph, null));
+        };
+
+        diagramCtrl.prototype.validate = function () {
+            var res = this.validateService.validate(this.shapesList, this.graph);
+            if (res.indexOf("passed") == -1 && res.indexOf("undefined") == -1) {
+                alert(res);
+            }
         };
 
         diagramCtrl.prototype.clear = function () {
@@ -70,6 +104,7 @@ var Controllers;
             this.currentShape.property1 = $('#property1').val();
             this.currentShape.property2 = $('#property2').val();
             this.currentShape.setText($('#text').val());
+            this.currentShape.id = $('#id').val();
 
             $('#alertblock').append($('<div>').attr('id', 'alert').attr('class', 'bg-success').text('Successfully updated'));
             $('#alert').append('<button type="button" class="close" data-dismiss="alert">&times;</button>');
@@ -79,8 +114,47 @@ var Controllers;
             $('#properties').attr("class", "col-md-6 hidden");
         };
 
-        diagramCtrl.prototype.validate = function () {
-            alert(this.validateService.validate(this.shapesList, this.graph));
+        diagramCtrl.prototype.uploadFromFile = function () {
+            var graph = this.graph;
+            var th = this;
+            var cnt = 0;
+            var dy = 0;
+            var dx = 0;
+            var prev = 0;
+            $.getJSON("graph.json").done(function (json) {
+                json.nodes.forEach(function (node) {
+                    switch (node.type) {
+                        case "Button":
+                            var button = ShapesFactory.createButton(graph, node.id, node.action);
+                            button.el.translate(90 * dx, 100 * dy);
+                            th.shapesList.push(button);
+                            break;
+                        case "Input":
+                            var input = ShapesFactory.createInput(graph, node.id, node.action);
+                            input.el.translate(90 * dx, 100 * dy);
+                            th.shapesList.push(input);
+                            break;
+                        case "Label":
+                            var label = ShapesFactory.createLabel(graph, node.id);
+                            label.el.translate(90 * dx, 100 * dy);
+                            th.shapesList.push(label);
+                            break;
+                        default:
+                            alert('Unknown type');
+                    }
+                    ;
+                    cnt++;
+                    dx++;
+                    prev = dy;
+                    dy = (cnt - cnt % 6) / 6;
+                    if (dy != prev) {
+                        dx = 0;
+                    }
+                });
+            }).fail(function (jqxhr, textStatus, error) {
+                var err = textStatus + ", " + error;
+                alert("Request Failed: " + err);
+            });
         };
         return diagramCtrl;
     })();
@@ -88,53 +162,35 @@ var Controllers;
 })(Controllers || (Controllers = {}));
 angular.module('diagram', ['controllers', 'services', 'directives']);
 var directives = angular.module('directives', []);
-var ActionNode = (function () {
-    function ActionNode(el) {
+var ButtonAction;
+(function (ButtonAction) {
+    ButtonAction[ButtonAction["Unknown"] = 0] = "Unknown";
+    ButtonAction[ButtonAction["Click"] = 1] = "Click";
+    ButtonAction[ButtonAction["DoubleClick"] = 2] = "DoubleClick";
+})(ButtonAction || (ButtonAction = {}));
+
+var InputAction;
+(function (InputAction) {
+    InputAction[InputAction["Unknown"] = 0] = "Unknown";
+    InputAction[InputAction["Submit"] = 1] = "Submit";
+})(InputAction || (InputAction = {}));
+var Button = (function () {
+    function Button(el, id, action) {
         this.el = el;
-        this.type = NodeType.Action;
+        this.type = NodeType.Button;
+        this.id = id;
+        this.action = ButtonAction[action];
     }
-    ActionNode.prototype.setText = function (text) {
+    Button.prototype.setText = function (text) {
         this.text = text;
         this.el.attr({
             '.label': { text: text, 'ref-x': .2, 'ref-y': .9 / 2 }
         });
     };
-    ActionNode.prototype.getElement = function () {
+    Button.prototype.getElement = function () {
         return this.el;
     };
-    return ActionNode;
-})();
-var ConditionNode = (function () {
-    function ConditionNode(el) {
-        this.el = el;
-        this.type = NodeType.Condition;
-    }
-    ConditionNode.prototype.setText = function (text) {
-        this.text = text;
-        this.el.attr({
-            '.label': { text: text, 'ref-x': .3, 'ref-y': .4 }
-        });
-    };
-    ConditionNode.prototype.getElement = function () {
-        return this.el;
-    };
-    return ConditionNode;
-})();
-var FinalNode = (function () {
-    function FinalNode(el) {
-        this.el = el;
-        this.type = NodeType.Final;
-    }
-    FinalNode.prototype.setText = function (text) {
-        this.text = text;
-        this.el.attr({
-            '.label': { text: text, 'ref-x': .7 / 2, 'ref-y': .4 }
-        });
-    };
-    FinalNode.prototype.getElement = function () {
-        return this.el;
-    };
-    return FinalNode;
+    return Button;
 })();
 var InitialNode = (function () {
     function InitialNode(el) {
@@ -152,10 +208,53 @@ var InitialNode = (function () {
     };
     return InitialNode;
 })();
+var Input = (function () {
+    function Input(el, id, action) {
+        this.el = el;
+        this.type = NodeType.Input;
+        this.id = id;
+        this.action = InputAction[action];
+    }
+    Input.prototype.setText = function (text) {
+        this.text = text;
+        this.el.attr({
+            '.label': { text: text, 'ref-x': .7 / 2, 'ref-y': .4 }
+        });
+    };
+
+    Input.prototype.getElement = function () {
+        return this.el;
+    };
+    return Input;
+})();
+var Label = (function () {
+    function Label(el, id) {
+        this.el = el;
+        this.type = NodeType.Label;
+        this.id = id;
+    }
+    Label.prototype.setText = function (text) {
+        this.text = text;
+        this.el.attr({
+            '.label': { text: text, 'ref-x': .3, 'ref-y': .4 }
+        });
+    };
+    Label.prototype.getElement = function () {
+        return this.el;
+    };
+    return Label;
+})();
+var NodeType;
+(function (NodeType) {
+    NodeType[NodeType["Button"] = 0] = "Button";
+    NodeType[NodeType["Label"] = 1] = "Label";
+    NodeType[NodeType["Input"] = 2] = "Input";
+    NodeType[NodeType["Initial"] = 3] = "Initial";
+})(NodeType || (NodeType = {}));
 var ShapesFactory = (function () {
     function ShapesFactory() {
     }
-    ShapesFactory.createFinalNode = function (graph) {
+    ShapesFactory.createInput = function (graph, id, action) {
         var el = new joint.shapes.devs.EllipseWithPorts({
             position: { x: 20, y: 20 },
             inPorts: [''],
@@ -176,8 +275,12 @@ var ShapesFactory = (function () {
             }
         });
         graph.addCell(el);
-        var node = new FinalNode(el);
-        node.setText("final");
+
+        if (id == null) {
+            id = el.id;
+        }
+        var node = new Input(el, id, action);
+        node.setText("Input");
         return node;
     };
 
@@ -206,23 +309,24 @@ var ShapesFactory = (function () {
         return node;
     };
 
-    ShapesFactory.createActionNode = function (graph) {
+    ShapesFactory.createButton = function (graph, id, action) {
         var el = new joint.shapes.devs.RectWithPorts({
             position: { x: 20, y: 20 },
-            inPorts: ['', ''],
-            outPorts: ['', '']
+            outPorts: ['']
         });
         graph.addCell(el);
-        var node = new ActionNode(el);
-        node.setText("process");
+        if (id == null) {
+            id = el.id;
+        }
+        var node = new Button(el, id, action);
+        node.setText("Button");
         return node;
     };
 
-    ShapesFactory.createConditionNode = function (graph) {
+    ShapesFactory.createLabel = function (graph, id) {
         var el = new joint.shapes.devs.Diamond({
             position: { x: 20, y: 20 },
-            inPorts: ['', ''],
-            outPorts: ['', ''],
+            inPorts: [''],
             attrs: {
                 '.outer': {
                     stroke: '#000000',
@@ -233,10 +337,13 @@ var ShapesFactory = (function () {
             }
         });
 
+        if (id == null) {
+            id = el.id;
+        }
         el.rotate(45, 0);
         graph.addCell(el);
-        var node = new ConditionNode(el);
-        node.setText("123");
+        var node = new Label(el, id);
+        node.setText("Label");
         return node;
     };
     return ShapesFactory;
@@ -252,25 +359,25 @@ var ValidateService = (function () {
     function ValidateService() {
         this.possibleEdges = [];
 
-        this.possibleEdges.push(new Edge(NodeType.Condition, NodeType.Condition));
-        this.possibleEdges.push(new Edge(NodeType.Condition, NodeType.Action));
-        this.possibleEdges.push(new Edge(NodeType.Condition, NodeType.Final));
+        this.possibleEdges.push(new Edge(NodeType.Label, NodeType.Label));
+        this.possibleEdges.push(new Edge(NodeType.Label, NodeType.Button));
+        this.possibleEdges.push(new Edge(NodeType.Label, NodeType.Input));
 
-        this.possibleEdges.push(new Edge(NodeType.Initial, NodeType.Condition));
-        this.possibleEdges.push(new Edge(NodeType.Initial, NodeType.Final));
-        this.possibleEdges.push(new Edge(NodeType.Initial, NodeType.Action));
+        this.possibleEdges.push(new Edge(NodeType.Initial, NodeType.Label));
+        this.possibleEdges.push(new Edge(NodeType.Initial, NodeType.Input));
+        this.possibleEdges.push(new Edge(NodeType.Initial, NodeType.Button));
 
-        this.possibleEdges.push(new Edge(NodeType.Action, NodeType.Condition));
-        this.possibleEdges.push(new Edge(NodeType.Action, NodeType.Final));
-        this.possibleEdges.push(new Edge(NodeType.Action, NodeType.Initial));
-        this.possibleEdges.push(new Edge(NodeType.Action, NodeType.Action));
+        this.possibleEdges.push(new Edge(NodeType.Button, NodeType.Label));
+        this.possibleEdges.push(new Edge(NodeType.Button, NodeType.Input));
+        this.possibleEdges.push(new Edge(NodeType.Button, NodeType.Initial));
+        this.possibleEdges.push(new Edge(NodeType.Button, NodeType.Button));
     }
     ValidateService.prototype.validate = function (shapes, graph) {
         var links = graph.getLinks();
         var res;
         var find;
         var th = this;
-        res = "Validation passed";
+        res = "Validation passed!";
         links.forEach(function (link) {
             find = false;
             var source = link.get('source');
@@ -286,6 +393,7 @@ var ValidateService = (function () {
                 res = "Cant accept edge from " + NodeType[sourceType] + " to " + NodeType[targetType];
             }
         });
+
         return res;
     };
 

@@ -1,14 +1,17 @@
-class ConditionNode implements Shape {
+class Label implements Shape {
+    id:string;
     type:NodeType;
     property1:string;
     property2:string;
     text:string;
     el:joint.shapes.devs.Diamond;
 
-    constructor(el:joint.shapes.devs.Diamond) {
+    constructor(el:joint.shapes.devs.Diamond, id:string) {
         this.el = el;
-        this.type = NodeType.Condition;
+        this.type = NodeType.Label;
+        this.id = id;
     }
+
 
     setText(text:string) {
         this.text = text;
