@@ -1,6 +1,6 @@
 enum NodeType {
     Button,
-    Label,
+    Map,
     Input,
     Initial
 }

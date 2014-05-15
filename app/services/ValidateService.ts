@@ -5,18 +5,12 @@ class ValidateService {
     constructor() {
         this.possibleEdges = [];
 
-        this.possibleEdges.push(new Edge(NodeType.Label, NodeType.Label));
-        this.possibleEdges.push(new Edge(NodeType.Label, NodeType.Button));
-        this.possibleEdges.push(new Edge(NodeType.Label, NodeType.Input));
 
-        this.possibleEdges.push(new Edge(NodeType.Initial, NodeType.Label));
-        this.possibleEdges.push(new Edge(NodeType.Initial, NodeType.Input));
-        this.possibleEdges.push(new Edge(NodeType.Initial, NodeType.Button));
+        this.possibleEdges.push(new Edge(NodeType.Button, ServiceType.GeolocationService));
+        this.possibleEdges.push(new Edge(NodeType.Button, ServiceType.NavigationService));
+        this.possibleEdges.push(new Edge(ServiceType.GeolocationService, NodeType.Map))
 
-        this.possibleEdges.push(new Edge(NodeType.Button, NodeType.Label));
-        this.possibleEdges.push(new Edge(NodeType.Button, NodeType.Input));
-        this.possibleEdges.push(new Edge(NodeType.Button, NodeType.Initial));
-        this.possibleEdges.push(new Edge(NodeType.Button, NodeType.Button));
+
     }
 
     validate(shapes:Shape[], graph:joint.dia.Graph) {
@@ -29,15 +23,15 @@ class ValidateService {
             find = false;
             var source:joint.shapes.devs.Generic = link.get('source');
             var target:joint.shapes.devs.Generic = link.get('target');
-            var sourceType:NodeType = th.getElementType(shapes, source);
-            var targetType:NodeType = th.getElementType(shapes, target);
+            var sourceType= th.getElementType(shapes, source);
+            var targetType = th.getElementType(shapes, target);
             th.possibleEdges.forEach(function (edge) {
                 if (edge.source == sourceType && edge.target == targetType) {
                     find = true;
                 }
             });
             if (!find) {
-                res = "Cant accept edge from " + NodeType[sourceType] + " to " + NodeType[targetType];
+                res = "Cant accept edge from " + NodeType[NodeType[sourceType]] + " to " + NodeType[targetType];
             }
         });
 

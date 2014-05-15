@@ -1,8 +1,8 @@
 class Edge {
-    source : NodeType;
-    target : NodeType;
+    source;
+    target;
 
-    constructor(source : NodeType, target : NodeType) {
+    constructor(source, target) {
         this.source = source;
         this.target = target;
     }

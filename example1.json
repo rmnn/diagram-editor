@@ -1,0 +1,29 @@
+{"nodes": [
+    {
+        "id": "button1",
+        "type": "Button",
+        "name": "name",
+        "action": "DoubleClick"
+    }
+], "activities": [
+    {
+        "name": "activity1"
+    },
+    {
+        "name": "activity2"
+    },
+    {
+        "name": "activity3"
+    }
+], "services": [
+    {
+        "id": "navService1",
+        "type": "NavigationService",
+        "activity": "activity2"
+    }
+], "links": [
+    {
+        "source": "button1",
+        "target": "navService1"
+    }
+]}

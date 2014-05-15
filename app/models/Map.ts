@@ -1,14 +1,12 @@
-class Label implements Shape {
+class MapNode implements Shape {
     id:string;
     type:NodeType;
-    property1:string;
-    property2:string;
     text:string;
-    el:joint.shapes.devs.Diamond;
+    el:joint.shapes.devs.EllipseWithPorts;
 
-    constructor(el:joint.shapes.devs.Diamond, id:string) {
+    constructor(el:joint.shapes.devs.EllipseWithPorts, id:string) {
         this.el = el;
-        this.type = NodeType.Label;
+        this.type = NodeType.Map;
         this.id = id;
     }
 
