@@ -2,6 +2,7 @@ module Controllers {
 
     export class diagramCtrl {
 
+
         graph = new joint.dia.Graph;
         paper = new joint.dia.Paper({ el: $('#paper'),
             width: 600,
@@ -20,8 +21,17 @@ module Controllers {
         json;
 
         constructor($scope, validateService:ValidateService) {
+
             $scope.vm = this;
             this.validateService = validateService;
+
+            window["importJSON"] = function (json) {
+                $scope.vm.import(json);
+            }
+
+            window["exportJSON"] = function () {
+                return $scope.vm.export();
+            }
 
             this.paper.on('cell:pointerdblclick',
                 function (cellView, evt, x, y) {
@@ -44,7 +54,6 @@ module Controllers {
 
                             }
                             if (shape.type == ServiceType[ServiceType.GeolocationService]) {
-                                console.log("GEOLOC");
                             }
                             if (shape.type == NodeType[NodeType.Button]) {
                                 $('#action').append($("<select>").attr("class", "form-control").attr("id", "my-select"));
@@ -171,6 +180,10 @@ module Controllers {
                 });
         }
 
+        import(json) {
+            this.generateGraph(json, this.graph);
+        }
+
         generateGraph(json, graph:joint.dia.Graph) {
             var graph = this.graph;
             this.json = json;
@@ -230,9 +243,9 @@ module Controllers {
                 if (shape.type == ServiceType[ServiceType.NavigationService]) {
                     var navService:NavigationService = th.anyTypeConvecter(shape);
                     var service = {
-                       id : navService.id,
-                       type : navService.type,
-                       activity : navService.activity
+                        id: navService.id,
+                        type: navService.type,
+                        activity: navService.activity
                     };
                     th.json.services[cnt] = service;
                     cnt++;
@@ -240,8 +253,8 @@ module Controllers {
                 if (shape.type == ServiceType[ServiceType.GeolocationService]) {
                     var geolocService:GeolocationService = th.anyTypeConvecter(shape);
                     var gservice = {
-                        id : geolocService.id,
-                        type : geolocService.type
+                        id: geolocService.id,
+                        type: geolocService.type
                     };
                     th.json.services[cnt] = gservice;
                     cnt++;
@@ -255,15 +268,14 @@ module Controllers {
                 var src = th.getNodeById(link.get('source').id);
                 var trgt = th.getNodeById(link.get('target').id);
                 var newLink = {
-                    source : src.id,
-                    target : trgt.id
+                    source: src.id,
+                    target: trgt.id
                 };
                 th.json.links[cnt] = newLink;
                 cnt++;
             });
 
-            $('#action').append($("<textarea>").attr("class", "form-control").attr("rows", "10").text(JSON.stringify(this.json)));
-
+            return th.json;
         }
 
         getNodeById(id) {
@@ -278,7 +290,7 @@ module Controllers {
             return el;
         }
 
-}
+    }
 
 
 }

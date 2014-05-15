@@ -16,6 +16,14 @@ var Controllers;
             $scope.vm = this;
             this.validateService = validateService;
 
+            window["importJSON"] = function (json) {
+                $scope.vm.import(json);
+            };
+
+            window["exportJSON"] = function () {
+                return $scope.vm.export();
+            };
+
             this.paper.on('cell:pointerdblclick', function (cellView, evt, x, y) {
                 $('#my-select').remove();
                 $('#properties').attr("class", "col-md-6");
@@ -35,7 +43,6 @@ var Controllers;
                             });
                         }
                         if (shape.type == ServiceType[ServiceType.GeolocationService]) {
-                            console.log("GEOLOC");
                         }
                         if (shape.type == NodeType[NodeType.Button]) {
                             $('#action').append($("<select>").attr("class", "form-control").attr("id", "my-select"));
@@ -151,6 +158,10 @@ var Controllers;
             });
         };
 
+        diagramCtrl.prototype.import = function (json) {
+            this.generateGraph(json, this.graph);
+        };
+
         diagramCtrl.prototype.generateGraph = function (json, graph) {
             var graph = this.graph;
             this.json = json;
@@ -239,7 +250,7 @@ var Controllers;
                 cnt++;
             });
 
-            $('#action').append($("<textarea>").attr("class", "form-control").attr("rows", "10").text(JSON.stringify(this.json)));
+            return th.json;
         };
 
         diagramCtrl.prototype.getNodeById = function (id) {
